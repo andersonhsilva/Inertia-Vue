@@ -16,7 +16,7 @@ Route::get('/', function () {
 
 Route::get('/home', function () {
     return Inertia::render('Home');
-});
+})->name('home');
 
 Route::get('/posts', [PostController::class, 'index']);
 
