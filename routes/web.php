@@ -18,7 +18,10 @@ Route::get('/home', function () {
 });
 
 Route::get('/about', function () {
-    return Inertia::render('About');
+    return Inertia::render('About', [
+        'name' => 'Anderson Henrique da Silva',
+        'course' => 'Inertia Vue + Laravel',
+    ]);
 });
 
 Route::middleware([

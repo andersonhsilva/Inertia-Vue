@@ -1,6 +1,7 @@
 <template>
     <div>
         <h1>Estou na About!</h1>
+        <h2>Olá {{ name }}, você está estudando o curso de: {{ course }}</h2>
     </div>
 </template>
 
@@ -8,7 +9,9 @@
 defineOptions({
     name: 'PageAbout'
 });
+
 // Aqui você pode definir as reativas, props, emit e outras funcionalidades.
+const props = defineProps(['name', 'course']);
 
 </script>
 
