@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PostController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -16,6 +17,8 @@ Route::get('/', function () {
 Route::get('/home', function () {
     return Inertia::render('Home');
 });
+
+Route::get('/posts', [PostController::class, 'index']);
 
 Route::get('/about', function () {
     return Inertia::render('About', [
