@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StorePostRequest;
 use App\Models\Post;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class PostController extends Controller
@@ -14,7 +14,7 @@ class PostController extends Controller
     public function index()
     {
         $posts = Post::all();
-        return Inertia('Dashboard', compact('posts'));
+        return Inertia::render('Dashboard', compact('posts'));
     }
 
     /**
@@ -22,30 +22,19 @@ class PostController extends Controller
      */
     public function create()
     {
-        return Inertia('Create');
+        return Inertia::render('Create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StorePostRequest $request)
     {
-        sleep(15);
-
-        // Validação dos dados recebidos
-        $validatedData = $request->validate([
-            'title' => 'required|string|max:255',
-            'content' => 'required|string',
-        ]);
-
         try {
-            // Criação do novo post com os dados validados
-            $post = Post::create($validatedData);
+            $post = Post::create($request->validated());
 
-            // Adiciona uma mensagem de sucesso à sessão
             return redirect()->route('dashboard.create')->with('success', 'Postagem criada com sucesso!');
         } catch (\Exception $e) {
-            // Adiciona uma mensagem de erro à sessão
             return redirect()->route('dashboard.create')->with('error', 'Ocorreu um erro ao criar a postagem.');
         }
     }
@@ -63,15 +52,24 @@ class PostController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $post = Post::findOrFail($id);
+        return Inertia::render('Edit', compact('post'));
     }
+
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(StorePostRequest $request, string $id)
     {
-        //
+        try {
+            $post = Post::findOrFail($id);
+            $post->update($request->validated());
+
+            return redirect()->route('dashboard.edit')->with('success', 'Postagem editada com sucesso!');
+        } catch (\Exception $e) {
+            return redirect()->route('dashboard.edit')->with('error', 'Ocorreu um erro ao editar a postagem.');
+        }
     }
 
     /**
@@ -79,6 +77,13 @@ class PostController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+            $post = Post::findOrFail($id);
+            $post->delete();
+
+            return redirect()->route('dashboard')->with('success', 'Postagem excluída com sucesso!');
+        } catch (\Exception $e) {
+            return redirect()->route('dashboard')->with('error', 'Ocorreu um erro ao excluir a postagem.');
+        }
     }
 }

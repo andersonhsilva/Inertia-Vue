@@ -2,30 +2,35 @@
 import { Link, useForm, usePage } from '@inertiajs/inertia-vue3';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import LayoutNavbar from '@/Layouts/LayoutNavbar.vue';
-import { ref, computed } from 'vue';
 
-defineOptions({
-    name: 'Create'
+// Definindo as props para receber o post
+const props = defineProps({
+    post: {
+        type: Object,
+        required: true
+    },
 });
 
-// Usando useForm para gerenciar os dados do formulário
+// Inicialize o formulário com os dados recebidos pela prop
 const form = useForm({
-    title: '',
-    content: ''
+    id: props.post.id ?? null,
+    title: props.post.title ?? '',
+    content: props.post.content ?? '',
 });
 
 // Método para submeter o formulário
 function submitForm() {
-    form.post(route('dashboard.store'));
-};
+    form.put(route('dashboard.update', form.id));
+}
+
 </script>
 
 <template>
-    <AppLayout title="Create">
+    <AppLayout title="Edit Post">
         <template #header>
             <LayoutNavbar />
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Cadastro de Postagens
+                Edição de Postagens
             </h2>
         </template>
 
@@ -33,9 +38,9 @@ function submitForm() {
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                     <div class="container mx-auto p-6">
-                        <h1>Estou na página de Create Posts!</h1>
+                        <h1>Estou na página de Editar Posts!</h1>
 
-                        <!-- Botão para adicionar novo post -->
+                        <!-- Botão para voltar para a listagem -->
                         <div class="mb-4 flex justify-end">
                             <Link :href="route('dashboard')">
                             <button
@@ -66,7 +71,7 @@ function submitForm() {
                             <div class="flex justify-end">
                                 <!-- Botão Salvar -->
                                 <button type="submit" :disabled="form.processing"
-                                    class="me-2 bg-green-700 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300">
+                                    class="me-2 bg-green-700 text-white px-4 py-2 rounded-md hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-300">
                                     <i class="fas fa-save"></i> Salvar
                                 </button>
 
@@ -76,7 +81,12 @@ function submitForm() {
                                     <i class="fas fa-undo-alt"></i> Voltar
                                 </a>
                             </div>
+
                         </form>
+
+                        <div v-if="false" class="mt-5 bg-green-700 text-white p-4 rounded-md">
+                            cadastrado com sucesso
+                        </div>
 
                     </div>
                 </div>
