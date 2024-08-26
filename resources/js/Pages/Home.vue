@@ -1,14 +1,18 @@
 <template>
 
+    <Head>
+        <title>Home</title>
+    </Head>
+
     <div>
         <h1>Estou na Home!</h1>
         <LayoutMenu />
-    </div>   
+    </div>
 
 </template>
 
 <script setup>
-import { Link } from '@inertiajs/inertia-vue3';
+import { Link, Head } from '@inertiajs/inertia-vue3';
 import LayoutMenu from '../Layouts/LayoutMenu.vue';
 
 defineOptions({
