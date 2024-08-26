@@ -3,11 +3,8 @@
 
         <h1>Estou na página de Posts!</h1>
 
-        <!-- Botão para voltar -->
-        <div class="mb-4 flex justify-end">
-            <Link :href="route('home')">Home</Link>
-        </div>
-
+        <LayoutMenu />
+        
         <!-- Botão para adicionar novo post -->
         <div class="mb-4 flex justify-end">
             <button
@@ -45,6 +42,7 @@
 
 <script setup>
 import { Link } from '@inertiajs/inertia-vue3';
+import LayoutMenu from '../Layouts/LayoutMenu.vue';
 
 defineOptions({
     name: 'PagePosts'

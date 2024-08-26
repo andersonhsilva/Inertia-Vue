@@ -2,10 +2,14 @@
     <div>
         <h1>Estou na About!</h1>
         <h2>Olá {{ name }}, você está estudando o curso de: {{ course }}</h2>
+
+        <LayoutMenu />
     </div>
 </template>
 
 <script setup>
+import LayoutMenu from '../Layouts/LayoutMenu.vue';
+
 defineOptions({
     name: 'PageAbout'
 });

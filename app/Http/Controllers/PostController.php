@@ -13,6 +13,7 @@ class PostController extends Controller
      */
     public function index()
     {
+        sleep(5);
         $posts = Post::all();
         return Inertia('Posts', compact('posts'));
     }

@@ -1,10 +1,16 @@
 <template>
+
     <div>
         <h1>Estou na Home!</h1>
-    </div>
+        <LayoutMenu />
+    </div>   
+
 </template>
 
 <script setup>
+import { Link } from '@inertiajs/inertia-vue3';
+import LayoutMenu from '../Layouts/LayoutMenu.vue';
+
 defineOptions({
     name: 'PageHome'
 });
