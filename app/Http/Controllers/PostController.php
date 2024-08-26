@@ -13,9 +13,8 @@ class PostController extends Controller
      */
     public function index()
     {
-        sleep(5);
         $posts = Post::all();
-        return Inertia('Posts', compact('posts'));
+        return Inertia('Dashboard', compact('posts'));
     }
 
     /**
@@ -23,7 +22,7 @@ class PostController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia('Create');
     }
 
     /**
@@ -31,7 +30,24 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        sleep(15);
+
+        // Validação dos dados recebidos
+        $validatedData = $request->validate([
+            'title' => 'required|string|max:255',
+            'content' => 'required|string',
+        ]);
+
+        try {
+            // Criação do novo post com os dados validados
+            $post = Post::create($validatedData);
+
+            // Adiciona uma mensagem de sucesso à sessão
+            return redirect()->route('dashboard.create')->with('success', 'Postagem criada com sucesso!');
+        } catch (\Exception $e) {
+            // Adiciona uma mensagem de erro à sessão
+            return redirect()->route('dashboard.create')->with('error', 'Ocorreu um erro ao criar a postagem.');
+        }
     }
 
     /**
