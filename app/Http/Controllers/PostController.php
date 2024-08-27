@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePostRequest;
 use App\Models\Post;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class PostController extends Controller
@@ -30,12 +31,18 @@ class PostController extends Controller
      */
     public function store(StorePostRequest $request)
     {
+        $objResult = [];
+        DB::beginTransaction();
         try {
-            $post = Post::create($request->toArray());
+            $post = Post::create($request->validated());
 
-            return Inertia::render('Create', ['success' => 'Postagem criada com sucesso!']);
+            DB::commit();
+            $objResult = ['object' => $post, 'type' => 'success', 'message' => 'Postagem criada com sucesso!'];
         } catch (\Exception $e) {
-            return back()->withErrors(['errors' => $e->getMessage()])->withInput();
+            DB::rollBack();
+            $objResult = ['object' => null, 'type' => 'error', 'message' => $e->getMessage()];
+        } finally {
+            return Inertia::render('Create', ['objResult' => $objResult]);
         }
     }
 

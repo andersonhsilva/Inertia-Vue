@@ -45,11 +45,6 @@
             </tbody>
         </table>
 
-        <div v-if="fase" class="mt-5 bg-green-700 text-white p-4 rounded-md">
-            excluido com sucesso
-        </div>
-
-
     </div>
 
 </template>
