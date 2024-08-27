@@ -32,7 +32,7 @@
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                         <a :href="route('dashboard.edit', { id: post.id })" title="Editar"
-                            class="me-2 px-2 py-2 bg-blue-600 text-white text-xs rounded hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-800">
+                            class="me-2 px-2 py-2 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-800">
                             <i class="fas fa-edit"></i>
                         </a>
                         <a :href="route('dashboard.destroy', { id: post.id })" title="Excluir"

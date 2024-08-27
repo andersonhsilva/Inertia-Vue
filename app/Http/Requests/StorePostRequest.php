@@ -26,4 +26,11 @@ class StorePostRequest extends FormRequest
             'content' => 'required|string',
         ];
     }
+    public function messages(): array
+    {
+        return [
+            'title.required' => 'Informar o titulo',
+            'content.required' => 'Informar o conteúdo', 
+        ];
+    }
 }

@@ -31,11 +31,11 @@ class PostController extends Controller
     public function store(StorePostRequest $request)
     {
         try {
-            $post = Post::create($request->validated());
+            $post = Post::create($request->toArray());
 
-            return redirect()->back()->with('message', ['success' => 'Postagem criada com sucesso!']);
+            return Inertia::render('Create', ['success' => 'Postagem criada com sucesso!']);
         } catch (\Exception $e) {
-            return redirect()->back()->with('message', ['error' => 'Ocorreu um erro ao criar a postagem.']);
+            return back()->withErrors(['errors' => $e->getMessage()])->withInput();
         }
     }
 

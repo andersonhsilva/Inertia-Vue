@@ -74,12 +74,13 @@ import AppLayout from '@/Layouts/AppLayout.vue';
 import LayoutNavbar from '@/Layouts/LayoutNavbar.vue';
 
 // Definindo as props para receber o post
-const props = defineProps({
-    post: {
-        type: Object,
-        required: true
-    },
-});
+// const props = defineProps({
+//     post: {
+//         type: Object,
+//         required: true
+//     },
+// });
+const props = defineProps(['post']);
 
 // Inicialize o formulário com os dados recebidos pela prop
 const form = useForm({
