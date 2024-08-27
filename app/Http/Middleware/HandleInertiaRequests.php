@@ -36,7 +36,10 @@ class HandleInertiaRequests extends Middleware
     public function share(Request $request): array
     {
         return array_merge(parent::share($request), [
-            //
+            // toda a propriedade que eu criar nessa middleware se torna disponivel na sessao da pagina
+            'flash' => [
+                'objResult' => session('objResult')
+            ]
         ]);
     }
 }
