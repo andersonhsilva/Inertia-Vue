@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePostRequest;
 use App\Models\Post;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
@@ -29,12 +30,12 @@ class PostController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StorePostRequest $request)
+    public function store(Request $request)
     {
         $objResult = [];
         DB::beginTransaction();
         try {
-            $post = Post::create($request->validated());
+            $post = Post::create($request->all());
 
             DB::commit();
             $objResult = ['object' => $post, 'type' => 'success', 'message' => 'Postagem criada com sucesso!'];
