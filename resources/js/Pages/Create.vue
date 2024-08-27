@@ -92,6 +92,7 @@ const messageForm = reactive({
     object: null,
     type: undefined,
     message: undefined,
+    timeOutMessage: null,
 });
 
 // campos do formulario para o model
@@ -102,10 +103,7 @@ const form = useForm({
 
 // envia o formulario pelo inertia
 const submitForm = () => {
-    form.transform((data) => ({
-        ...data,
-        /* manipula os dados antes do envio do formulario */
-    })).post(route('dashboard.store'), {
+    form.post(route('dashboard.store'), {
         preserveScroll: true,
         onProgress: (progress) => {
             console.log(`Progresso: ${progress.percentage}%`);
@@ -129,8 +127,9 @@ const handleResponse = () => {
     messageForm.type = type;
     messageForm.message = message;
     messageForm.show = true;
-    setTimeout(() => {
+    if (messageForm.timeOutMessage) clearTimeout(messageForm.timeOutMessage);
+    messageForm.timeOutMessage = setTimeout(() => {
         messageForm.show = false;
-    }, 10000);
+    }, 15000);
 }
 </script>
