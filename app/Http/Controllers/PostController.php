@@ -38,7 +38,7 @@ class PostController extends Controller
             $post = Post::create($request->all());
 
             DB::commit();
-            $objResult = ['object' => $post, 'type' => 'success', 'message' => 'Postagem criada com sucesso!'];
+            $objResult = ['type' => 'success', 'message' => 'Postagem criada com sucesso!', 'object' => $post];
         } catch (\Exception $e) {
             DB::rollBack();
             $objResult = ['object' => null, 'type' => 'error', 'message' => $e->getMessage()];
