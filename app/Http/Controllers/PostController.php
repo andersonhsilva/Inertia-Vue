@@ -33,9 +33,9 @@ class PostController extends Controller
         try {
             $post = Post::create($request->validated());
 
-            return redirect()->back()->with('success', 'Postagem criada com sucesso!');
+            return redirect()->back()->with('message', ['success' => 'Postagem criada com sucesso!']);
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Ocorreu um erro ao criar a postagem.');
+            return redirect()->back()->with('message', ['error' => 'Ocorreu um erro ao criar a postagem.']);
         }
     }
 
@@ -66,9 +66,9 @@ class PostController extends Controller
             $post = Post::findOrFail($id);
             $post->update($request->validated());
 
-            return redirect()->back()->with('success', 'Postagem editada com sucesso!');
+            return redirect()->back()->with('message', ['success' => 'Postagem editada com sucesso!']);
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Ocorreu um erro ao editar a postagem.');
+            return redirect()->back()->with('message', ['error' => 'Ocorreu um erro ao editar a postagem.']);
         }
     }
 
@@ -81,9 +81,9 @@ class PostController extends Controller
             $post = Post::findOrFail($id);
             $post->delete();
 
-            return redirect()->back()->with('success', 'Postagem excluída com sucesso!');
+            return redirect()->back()->with('message', ['success' => 'Postagem excluída com sucesso!']);
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Ocorreu um erro ao excluir a postagem.');
+            return redirect()->back()->with('message', ['error' => 'Ocorreu um erro ao excluir a postagem.']);
         }
     }
 }

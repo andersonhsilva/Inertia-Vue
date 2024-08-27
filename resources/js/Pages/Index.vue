@@ -37,13 +37,19 @@
                         </a>
                         <a :href="route('dashboard.destroy', { id: post.id })" title="Excluir"
                             class="me-2 px-2 py-2 bg-red-600 text-white text-xs rounded hover:bg-red-700 focus:bg-red-700 active:bg-red-800"
-                            @click.prevent="deletePost(post.id)">
+                            @click.prevent="deleteRegister(post.id)">
                             <i class="fas fa-trash"></i>
                         </a>
                     </td>
                 </tr>
             </tbody>
         </table>
+
+        <div v-if="fase" class="mt-5 bg-green-700 text-white p-4 rounded-md">
+            excluido com sucesso
+        </div>
+
+
     </div>
 
 </template>
@@ -53,12 +59,12 @@ import { Link } from '@inertiajs/inertia-vue3';
 import { Inertia } from '@inertiajs/inertia';
 
 defineOptions({
-    name: 'Inddex'
+    name: 'Index'
 });
 
 const props = defineProps(['posts']);
 
-function deletePost(id) {
+function deleteRegister(id) {
     if (confirm('Tem certeza que deseja excluir esta postagem?')) {
         Inertia.delete(route('dashboard.destroy', { id }));
     }

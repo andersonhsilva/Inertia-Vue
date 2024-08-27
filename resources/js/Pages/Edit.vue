@@ -1,30 +1,3 @@
-<script setup>
-import { Link, useForm, usePage } from '@inertiajs/inertia-vue3';
-import AppLayout from '@/Layouts/AppLayout.vue';
-import LayoutNavbar from '@/Layouts/LayoutNavbar.vue';
-
-// Definindo as props para receber o post
-const props = defineProps({
-    post: {
-        type: Object,
-        required: true
-    },
-});
-
-// Inicialize o formulário com os dados recebidos pela prop
-const form = useForm({
-    id: props.post.id ?? null,
-    title: props.post.title ?? '',
-    content: props.post.content ?? '',
-});
-
-// Método para submeter o formulário
-function submitForm() {
-    form.put(route('dashboard.update', form.id));
-}
-
-</script>
-
 <template>
     <AppLayout title="Edit Post">
         <template #header>
@@ -85,7 +58,7 @@ function submitForm() {
                         </form>
 
                         <div v-if="false" class="mt-5 bg-green-700 text-white p-4 rounded-md">
-                            cadastrado com sucesso
+                            editado com sucesso
                         </div>
 
                     </div>
@@ -94,3 +67,30 @@ function submitForm() {
         </div>
     </AppLayout>
 </template>
+
+<script setup>
+import { Link, useForm, usePage } from '@inertiajs/inertia-vue3';
+import AppLayout from '@/Layouts/AppLayout.vue';
+import LayoutNavbar from '@/Layouts/LayoutNavbar.vue';
+
+// Definindo as props para receber o post
+const props = defineProps({
+    post: {
+        type: Object,
+        required: true
+    },
+});
+
+// Inicialize o formulário com os dados recebidos pela prop
+const form = useForm({
+    id: props.post.id ?? null,
+    title: props.post.title ?? '',
+    content: props.post.content ?? '',
+});
+
+// Método para submeter o formulário
+function submitForm() {
+    form.put(route('dashboard.update', form.id));
+}
+
+</script>

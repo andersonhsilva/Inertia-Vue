@@ -1,25 +1,3 @@
-<script setup>
-import { Link, useForm, usePage } from '@inertiajs/inertia-vue3';
-import AppLayout from '@/Layouts/AppLayout.vue';
-import LayoutNavbar from '@/Layouts/LayoutNavbar.vue';
-import { ref, computed } from 'vue';
-
-defineOptions({
-    name: 'Create'
-});
-
-// Usando useForm para gerenciar os dados do formulário
-const form = useForm({
-    title: '',
-    content: ''
-});
-
-// Método para submeter o formulário
-function submitForm() {
-    form.post(route('dashboard.store'));
-};
-</script>
-
 <template>
     <AppLayout title="Create">
         <template #header>
@@ -78,9 +56,35 @@ function submitForm() {
                             </div>
                         </form>
 
+                        <div v-if="false" class="mt-5 bg-green-700 text-white p-4 rounded-md">
+                            cadastrado com sucesso
+                        </div>
+
                     </div>
                 </div>
             </div>
         </div>
     </AppLayout>
 </template>
+
+<script setup>
+import { Link, useForm, usePage } from '@inertiajs/inertia-vue3';
+import AppLayout from '@/Layouts/AppLayout.vue';
+import LayoutNavbar from '@/Layouts/LayoutNavbar.vue';
+import { ref, computed } from 'vue';
+
+defineOptions({
+    name: 'Create'
+});
+
+// Usando useForm para gerenciar os dados do formulário
+const form = useForm({
+    title: '',
+    content: ''
+});
+
+// Método para submeter o formulário
+function submitForm() {
+    form.post(route('dashboard.store'));
+};
+</script>
