@@ -83,9 +83,6 @@ defineOptions({
     name: 'Create'
 });
 
-// propriedades de objetos
-const props = defineProps(['objResult']);
-
 // diretivas de feedback do formulario ao usuario
 const messageForm = reactive({
     show: false,
@@ -122,14 +119,20 @@ const submitForm = () => {
 
 // atualiza as diretivas de variaveis conforme dados do backend
 const handleResponse = () => {
-    const { object, type, message } = props.objResult;
-    messageForm.object = object;
-    messageForm.type = type;
-    messageForm.message = message;
-    messageForm.show = true;
-    if (messageForm.timeOutMessage) clearTimeout(messageForm.timeOutMessage);
-    messageForm.timeOutMessage = setTimeout(() => {
-        messageForm.show = false;
-    }, 15000);
-}
+    let objResult = usePage().props.flash.objResult;
+
+    if (objResult) {
+        const { object, type, message } = objResult;
+        messageForm.object = object;
+        messageForm.type = type;
+        messageForm.message = message;
+        messageForm.show = true;
+
+        // exibe e oculta a mensagem apos um certo tempo, de modo que nao permite o tempo da mensagem anterior atrapalhar a exibicao do tempo da mensagem atual
+        if (messageForm.timeOutMessage) clearTimeout(messageForm.timeOutMessage);
+        messageForm.timeOutMessage = setTimeout(() => {
+            messageForm.show = false;
+        }, 15000);
+    }
+};
 </script>

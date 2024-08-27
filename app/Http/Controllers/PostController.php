@@ -43,7 +43,7 @@ class PostController extends Controller
             DB::rollBack();
             $objResult = ['object' => null, 'type' => 'error', 'message' => $e->getMessage()];
         } finally {
-            return Inertia::render('Create', ['objResult' => $objResult]);
+            return redirect()->back()->with(['objResult' => $objResult]);
         }
     }
 
