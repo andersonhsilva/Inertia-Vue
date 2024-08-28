@@ -3,7 +3,7 @@
 
         <h1>Estou na página de Posts!</h1>
 
-        <!-- Botão para adicionar novo post -->
+        <!-- Botão para adicionar novo -->
         <div class="mb-4 flex justify-end">
             <Link :href="route('dashboard.create')">
             <button
@@ -13,7 +13,7 @@
             </Link>
         </div>
 
-        <!-- Tabela de posts -->
+        <!-- Tabela de registros -->
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
                 <tr>
@@ -25,19 +25,19 @@
                 </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
-                <tr v-for="post in posts" :key="post.id" class="hover:bg-gray-100">
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ post.id }}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ post.title }}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"> {{ truncate(post.content, 50) }}
+                <tr v-for="iObject in iObjects" :key="iObject.id" class="hover:bg-gray-100">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ iObject.id }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ iObject.title }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"> {{ truncate(iObject.content, 50) }}
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        <a :href="route('dashboard.edit', { id: post.id })" title="Editar"
+                        <a :href="route('dashboard.edit', { id: iObject.id })" title="Editar"
                             class="me-2 px-2 py-2 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-800">
                             <i class="fas fa-edit"></i>
                         </a>
-                        <a :href="route('dashboard.destroy', { id: post.id })" title="Excluir"
+                        <a :href="route('dashboard.destroy', { id: iObject.id })" title="Excluir"
                             class="me-2 px-2 py-2 bg-red-600 text-white text-xs rounded hover:bg-red-700 focus:bg-red-700 active:bg-red-800"
-                            @click.prevent="deleteRegister(post.id)">
+                            @click.prevent="deleteRegister(iObject.id)">
                             <i class="fas fa-trash"></i>
                         </a>
                     </td>
@@ -50,22 +50,25 @@
 </template>
 
 <script setup>
+// importacoes das dependencias utilizadas no codigo
 import { Link } from '@inertiajs/inertia-vue3';
 import { Inertia } from '@inertiajs/inertia';
 
+// define o nome do setup do componente para debug
 defineOptions({
-    name: 'Index'
+    name: 'Index',
 });
 
-const props = defineProps(['posts']);
+// propriedades de variaveis recebidas do backend para menipulacao dos dados
+const props = defineProps(['iObjects']);
 
-function deleteRegister(id) {
+const deleteRegister = (id) => {
     if (confirm('Tem certeza que deseja excluir esta postagem?')) {
         Inertia.delete(route('dashboard.destroy', { id }));
     }
 };
 
-function truncate(text, length) {
+const truncate = (text, length) => {
     return text.length > length ? text.substring(0, length) + '...' : text;
 }
 

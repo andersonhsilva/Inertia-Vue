@@ -15,8 +15,8 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::all();
-        return Inertia::render('Dashboard', compact('posts'));
+        $iObjects = Post::all();
+        return Inertia::render('Dashboard', compact('iObjects'));
     }
 
     /**
@@ -30,18 +30,18 @@ class PostController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request) // StorePostRequest $request
     {
         $objResult = [];
         DB::beginTransaction();
         try {
-            $post = Post::create($request->all());
+            $object = Post::create($request->all());
 
             DB::commit();
-            $objResult = ['type' => 'success', 'message' => 'Postagem criada com sucesso!', 'object' => $post];
+            $objResult = ['type' => 'success', 'message' => 'Postagem criada com sucesso!', 'object' => $object];
         } catch (\Exception $e) {
             DB::rollBack();
-            $objResult = ['object' => null, 'type' => 'error', 'message' => $e->getMessage()];
+            $objResult = ['type' => 'error', 'message' => $e->getMessage()];
         } finally {
             return redirect()->back()->with(['objResult' => $objResult]);
         }
@@ -60,23 +60,28 @@ class PostController extends Controller
      */
     public function edit(string $id)
     {
-        $post = Post::findOrFail($id);
-        return Inertia::render('Edit', compact('post'));
+        $eObject = Post::findOrFail($id);
+        return Inertia::render('Edit', compact('eObject'));
     }
-
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(StorePostRequest $request, string $id)
+    public function update(Request $request, string $id) // StorePostRequest $request
     {
+        $objResult = [];
+        DB::beginTransaction();
         try {
             $post = Post::findOrFail($id);
-            $post->update($request->validated());
+            $post->update($request->all());
 
-            return redirect()->back()->with('message', ['success' => 'Postagem editada com sucesso!']);
+            DB::commit();
+            $objResult = ['type' => 'success', 'message' => 'Postagem alterada com sucesso!', 'object' => $post];
         } catch (\Exception $e) {
-            return redirect()->back()->with('message', ['error' => 'Ocorreu um erro ao editar a postagem.']);
+            DB::rollBack();
+            $objResult = ['type' => 'error', 'message' => $e->getMessage()];
+        } finally {
+            return redirect()->back()->with(['objResult' => $objResult]);
         }
     }
 
@@ -85,13 +90,19 @@ class PostController extends Controller
      */
     public function destroy(string $id)
     {
+        $objResult = [];
+        DB::beginTransaction();
         try {
             $post = Post::findOrFail($id);
             $post->delete();
 
-            return redirect()->back()->with('message', ['success' => 'Postagem excluída com sucesso!']);
+            DB::commit();
+            $objResult = ['type' => 'success', 'message' => 'Postagem excluída com sucesso!', 'object' => null];
         } catch (\Exception $e) {
-            return redirect()->back()->with('message', ['error' => 'Ocorreu um erro ao excluir a postagem.']);
+            DB::rollBack();
+            $objResult = ['type' => 'error', 'message' => $e->getMessage()];
+        } finally {
+            return redirect()->back()->with(['objResult' => $objResult]);
         }
     }
 }

@@ -25,10 +25,11 @@
 
                         <!-- Formulário -->
                         <form @submit.prevent="submitForm">
+
                             <!-- Campo Title -->
                             <div class="mb-4">
                                 <label for="title" class="block text-gray-700 font-bold mb-2">Título</label>
-                                <input type="text" id="title" v-model="form.title"
+                                <input v-model="form.title" type="text" id="title" name="title"
                                     class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     placeholder="Digite o título do post">
                             </div>
@@ -36,14 +37,14 @@
                             <!-- Campo Content -->
                             <div class="mb-4">
                                 <label for="content" class="block text-gray-700 font-bold mb-2">Conteúdo</label>
-                                <textarea id="content" v-model="form.content"
+                                <textarea v-model="form.content" id="content" name="content"
                                     class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     rows="5" placeholder="Digite o conteúdo do post"></textarea>
                             </div>
 
                             <div class="flex justify-end">
                                 <!-- Botão Salvar -->
-                                <button type="submit" :disabled="form.processing"
+                                <button :disabled="form.processing" type="submit"
                                     class="me-2 bg-green-700 text-white px-4 py-2 rounded-md hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-300">
                                     <i class="fas fa-save"></i> Salvar
                                 </button>
@@ -57,8 +58,10 @@
 
                         </form>
 
-                        <div v-if="false" class="mt-5 bg-green-700 text-white p-4 rounded-md">
-                            editado com sucesso
+                        <!-- exibe a mensagem do backend vinda do envio do formulario -->
+                        <div v-if="messageForm.show" class="mt-5 text-white p-4 rounded-md"
+                            :class="messageForm.type === 'success' ? 'bg-green-700' : 'bg-red-700'">
+                            {{ messageForm.message }}
                         </div>
 
                     </div>
@@ -69,28 +72,69 @@
 </template>
 
 <script setup>
-import { Link, useForm, usePage } from '@inertiajs/inertia-vue3';
+import { ref, reactive } from 'vue';
+import { Head, Link, router, useForm, usePage } from '@inertiajs/vue3';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import LayoutNavbar from '@/Layouts/LayoutNavbar.vue';
 
-// Definindo as props para receber o post
-const props = defineProps({
-    post: {
-        type: Object,
-        required: true
-    },
+// define o nome do setup do componente para debug
+defineOptions({
+    name: 'Edit',
 });
+
+// Definindo as props para receber o post
+const props = defineProps(['eObject']);
 
 // Inicialize o formulário com os dados recebidos pela prop
 const form = useForm({
-    id: props.post.id ?? null,
-    title: props.post.title ?? '',
-    content: props.post.content ?? '',
+    id: props.eObject.id ?? null,
+    title: props.eObject.title ?? '',
+    content: props.eObject.content ?? '',
 });
 
-// Método para submeter o formulário
-function submitForm() {
-    form.put(route('dashboard.update', form.id));
+// diretivas de feedback do formulario ao usuario
+const messageForm = reactive({
+    show: false,
+    object: null,
+    type: undefined,
+    message: undefined,
+    timeOutMessage: null,
+});
+
+// envia o formulario pelo inertia
+const submitForm = () => {
+    form.put(route('dashboard.update', form.id), {
+        preserveScroll: true,
+        onProgress: (progress) => {
+            console.log(`Progresso: ${progress.percentage}%`);
+        },
+        onSuccess: (response) => {
+            console.log(response);
+            handleResponse(true);
+        },
+        onError: (errors) => {
+            console.log(errors);
+            handleResponse(true);
+        }
+    });
+}
+
+// atualiza as diretivas de variaveis conforme dados do backend
+const handleResponse = (unexpected = false) => {
+    let objResult = usePage().props.flash.objResult;
+    if (objResult || unexpected) {
+        const { object, type, message } = objResult ?? {};
+        messageForm.object = object ?? null;
+        messageForm.type = type ?? 'error';
+        messageForm.message = message ?? 'Erro inesperado consulte o suporte.';
+        messageForm.show = true;
+
+        // exibe e oculta a mensagem apos um certo tempo, de modo que nao permite o tempo da mensagem anterior atrapalhar a exibicao do tempo da mensagem atual
+        if (messageForm.timeOutMessage) clearTimeout(messageForm.timeOutMessage);
+        messageForm.timeOutMessage = setTimeout(() => {
+            messageForm.show = false;
+        }, 15000);
+    }
 }
 
 </script>

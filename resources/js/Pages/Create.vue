@@ -28,7 +28,7 @@
                             <!-- Campo Title -->
                             <div class="mb-4">
                                 <label for="title" class="block text-gray-700 font-bold mb-2">Título</label>
-                                <input type="text" id="title" v-model="form.title"
+                                <input v-model="form.title" type="text" id="title" name="title"
                                     class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     placeholder="Digite o título do post">
                                 <div v-if="form.errors.email">{{ form.errors.title }}</div>
@@ -37,7 +37,7 @@
                             <!-- Campo Content -->
                             <div class="mb-4">
                                 <label for="content" class="block text-gray-700 font-bold mb-2">Conteúdo</label>
-                                <textarea id="content" v-model="form.content"
+                                <textarea v-model="form.content" id="content" name="content"
                                     class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     rows="5" placeholder="Digite o conteúdo do post"></textarea>
                                 <div v-if="form.errors.email">{{ form.errors.content }}</div>
@@ -45,7 +45,7 @@
 
                             <div class="flex justify-end">
                                 <!-- Botão Salvar -->
-                                <button type="submit" :disabled="form.processing"
+                                <button :disabled="form.processing" type="submit"
                                     class="me-2 bg-green-700 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300">
                                     <i class="fas fa-save"></i> Salvar
                                 </button>
@@ -72,15 +72,21 @@
 </template>
 
 <script setup>
-// importacoes des dependencias utilizadas no codigo
+// importacoes das dependencias utilizadas no codigo
 import { ref, reactive } from 'vue';
+import { Head, Link, router, useForm, usePage } from '@inertiajs/vue3';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import LayoutNavbar from '@/Layouts/LayoutNavbar.vue';
-import { Head, Link, router, useForm, usePage } from '@inertiajs/vue3';
 
-// define o setup do componente
+// define o nome do setup do componente para debug
 defineOptions({
-    name: 'Create'
+    name: 'Create',
+});
+
+// campos do formulario para o model
+const form = useForm({
+    title: '',
+    content: ''
 });
 
 // diretivas de feedback do formulario ao usuario
@@ -90,12 +96,6 @@ const messageForm = reactive({
     type: undefined,
     message: undefined,
     timeOutMessage: null,
-});
-
-// campos do formulario para o model
-const form = useForm({
-    title: '',
-    content: ''
 });
 
 // envia o formulario pelo inertia
@@ -112,20 +112,19 @@ const submitForm = () => {
         },
         onError: (errors) => {
             console.log(errors);
-            handleResponse();
+            handleResponse(true);
         }
     });
 }
 
 // atualiza as diretivas de variaveis conforme dados do backend
-const handleResponse = () => {
+const handleResponse = (unexpected = false) => {
     let objResult = usePage().props.flash.objResult;
-
-    if (objResult) {
-        const { object, type, message } = objResult;
-        messageForm.object = object;
-        messageForm.type = type;
-        messageForm.message = message;
+    if (objResult || unexpected) {
+        const { object, type, message } = objResult ?? {};
+        messageForm.object = object ?? null;
+        messageForm.type = type ?? 'error';
+        messageForm.message = message ?? 'Erro inesperado consulte o suporte.';
         messageForm.show = true;
 
         // exibe e oculta a mensagem apos um certo tempo, de modo que nao permite o tempo da mensagem anterior atrapalhar a exibicao do tempo da mensagem atual
@@ -134,5 +133,6 @@ const handleResponse = () => {
             messageForm.show = false;
         }, 15000);
     }
-};
+}
+
 </script>
